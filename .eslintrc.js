@@ -20,7 +20,7 @@ module.exports = {
       },
     ],
     'import/no-cycle': 'error',
-    'linebreak-style': ['error', 'unix'],
+    'linebreak-style': ['error', 'windows'],
     'import/order': [
       'error',
       {
