@@ -1,5 +1,3 @@
-import { useEffect, useState } from 'react';
-
 export const testData = {
   users: [
     {
@@ -114,65 +112,3 @@ export const testData = {
     },
   ],
 };
-
-const delayedFn =
-  <T, A extends any[]>(
-    fn: (...args: A) => T,
-    ms: number
-  ) =>
-  (...args: A) => {
-    return new Promise<T>((resolve) =>
-      setTimeout(() => resolve(fn(...args)), ms)
-    );
-  };
-
-export const getUser = delayedFn(
-  () => testData.users[0],
-  0
-);
-
-export const getOrganization = delayedFn(
-  (id: string) =>
-    testData.organizations.find((o) => o.id === id) ||
-    null,
-  300
-);
-
-export const getJobs = delayedFn(
-  (organizationId: string) =>
-    testData.jobs.filter(
-      (j) => j.organizationId === organizationId
-    ),
-  300
-);
-
-export const getJob = delayedFn(
-  (id: string) =>
-    testData.jobs.find((j) => j.id === id) || null,
-  300
-);
-
-const useTestData = <T>(promise: Promise<T>) => {
-  const [testData, setTestData] = useState<T | null>(
-    null
-  );
-
-  useEffect(() => {
-    if (!testData) {
-      promise.then(setTestData);
-    }
-  }, [promise, testData]);
-
-  return { data: testData, isLoading: !testData };
-};
-
-export const useUser = () => useTestData(getUser());
-
-export const useOrganization = (id: string) =>
-  useTestData(getOrganization(id));
-
-export const useJobs = (organizationId: string) =>
-  useTestData(getJobs(organizationId));
-
-export const useJob = (id: string) =>
-  useTestData(getJob(id));

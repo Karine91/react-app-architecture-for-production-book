@@ -3,18 +3,18 @@ import { Heading, HStack } from '@chakra-ui/react';
 import { ReactElement } from 'react';
 
 import { Link } from '@/components/link';
-import { Loading } from '@/components/loading';
 import { Seo } from '@/components/seo';
-import { JobsList } from '@/features/jobs';
+import { useUser } from '@/features/auth';
+import { useJobs, JobsList } from '@/features/jobs';
 import { DashboardLayout } from '@/layouts/dashboard-layout';
-import { useJobs, useUser } from '@/testing/test-data';
 
 const DashboardJobsPage = () => {
   const user = useUser();
-
-  const jobs = useJobs(user.data?.organizationId ?? '');
-
-  if (jobs.isLoading) return <Loading />;
+  const jobs = useJobs({
+    params: {
+      organizationId: user.data?.organizationId,
+    },
+  });
 
   if (!user.data) return null;
 
@@ -36,7 +36,7 @@ const DashboardJobsPage = () => {
         </Link>
       </HStack>
       <JobsList
-        jobs={jobs.data || []}
+        jobs={jobs.data}
         isLoading={jobs.isLoading}
         organizationId={user.data.organizationId}
         type="dashboard"

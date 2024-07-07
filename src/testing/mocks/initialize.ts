@@ -1,5 +1,8 @@
 import { IS_SERVER } from '@/config/constants';
-export const initializeMocks = () => {
+
+import { seedDb } from './seed-db';
+
+const initializeMocks = () => {
   if (IS_SERVER) {
     const { server } = require('./server');
     server.listen();
@@ -7,6 +10,7 @@ export const initializeMocks = () => {
     const { worker } = require('./browser');
     worker.start();
   }
+  seedDb();
 };
 
 initializeMocks();

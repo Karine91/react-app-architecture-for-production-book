@@ -7,13 +7,12 @@ import { ReactElement } from 'react';
 
 import { NotFound } from '@/components/not-found';
 import { Seo } from '@/components/seo';
-import { JobsList, Job } from '@/features/jobs';
-import { OrganizationInfo } from '@/features/organizations';
-import { PublicLayout } from '@/layouts/public-layout';
+import { JobsList, Job, getJobs } from '@/features/jobs';
 import {
-  getJobs,
   getOrganization,
-} from '@/testing/test-data';
+  OrganizationInfo,
+} from '@/features/organizations';
+import { PublicLayout } from '@/layouts/public-layout';
 
 type PublicOrganizationPageProps =
   InferGetServerSidePropsType<typeof getServerSideProps>;
@@ -63,8 +62,12 @@ export const getServerSideProps = async ({
   const organizationId = params?.organizationId as string;
 
   const [organization, jobs] = await Promise.all([
-    getOrganization(organizationId).catch(() => null),
-    getJobs(organizationId).catch(() => [] as Job[]),
+    getOrganization({ organizationId }).catch(() => null),
+    getJobs({
+      params: {
+        organizationId: organizationId,
+      },
+    }).catch(() => [] as Job[]),
   ]);
 
   return {

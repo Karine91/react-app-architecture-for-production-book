@@ -7,10 +7,6 @@ import { API_MOCKING } from '@/config/constants';
 import { MSWWrapperProps } from '@/lib/msw';
 import { AppProvider } from '@/providers/app';
 
-const MSWWrapper = dynamic<MSWWrapperProps>(() =>
-  import('@/lib/msw').then(({ MSWWrapper }) => MSWWrapper)
-);
-
 type NextPageWithLayout = NextPage & {
   getLayout?: (page: ReactElement) => ReactNode;
 };
@@ -18,6 +14,10 @@ type NextPageWithLayout = NextPage & {
 type AppPropsWithLayout = AppProps & {
   Component: NextPageWithLayout;
 };
+
+const MSWWrapper = dynamic<MSWWrapperProps>(() =>
+  import('@/lib/msw').then(({ MSWWrapper }) => MSWWrapper)
+);
 
 const App = ({
   Component,
