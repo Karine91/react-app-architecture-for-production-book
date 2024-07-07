@@ -20,7 +20,7 @@ jobs:
     name: E2E Tests
     runs-on: windows-latest
     steps:
-      - uses: action/checkout@v3
+      - uses: actions/checkout@v3
       - run: mv .env.example .env
       - uses: cypress-io/github-action@v4
         with:
