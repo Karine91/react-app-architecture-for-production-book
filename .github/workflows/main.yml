@@ -9,9 +9,9 @@ jobs:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: 20.11.1
       - run: mv .env.example .env
-      - run: npm install
+      - run: npm ci
       - run: npm run test
       - run: npm run lint
       - run: npm run format:check
