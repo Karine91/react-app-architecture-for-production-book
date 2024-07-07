@@ -26,7 +26,8 @@ jobs:
       - uses: cypress-io/github-action@v4
         with:
           build: npm run build
-          start-windows: npm run start:windows:server
+          install: false
+          start: npm run start
   deploy:
     name: Deploy To Vercel
     runs-on: windows-latest
