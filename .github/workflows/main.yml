@@ -17,12 +17,12 @@ jobs:
       - run: npm run format:check
       - run: npm run types:check
   e2e:
-    needs: [code-checks]
     name: E2E Tests
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v3
       - run: mv .env.example .env
+      - run: npm install
       - uses: cypress-io/github-action@v4
         with:
           build: npm run build
