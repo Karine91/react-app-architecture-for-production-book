@@ -18,14 +18,14 @@ jobs:
       - run: npm run types:check
   e2e:
     name: E2E Tests
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - run: mv .env.example .env
-      - uses: cypress-io/github-action@v4
+      - uses: cypress-io/github-action@v6
         with:
           build: npm run build
-          start: npm run start
+          start-windows: npm run start:windows:server
   deploy:
     name: Deploy To Vercel
     runs-on: windows-latest
