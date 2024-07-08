@@ -1,5 +1,6 @@
 import DashboardCreateJobPage from '@/pages/dashboard/jobs/create';
 import {
+  act,
   appRender,
   screen,
   userEvent,
@@ -45,12 +46,15 @@ describe('Dashboard Create Job Page', () => {
       name: /create/i,
     });
 
-    userEvent.type(positionInput, jobData.position);
-    userEvent.type(locationInput, jobData.location);
-    userEvent.type(departmentInput, jobData.department);
-    userEvent.type(infoInput, jobData.info);
+    // wrapping to avoid warnings - https://github.com/testing-library/user-event/issues/457
+    act(() => {
+      userEvent.type(positionInput, jobData.position);
+      userEvent.type(locationInput, jobData.location);
+      userEvent.type(departmentInput, jobData.department);
+      userEvent.type(infoInput, jobData.info);
 
-    userEvent.click(submitButton);
+      userEvent.click(submitButton);
+    });
 
     await waitFor(() =>
       expect(
