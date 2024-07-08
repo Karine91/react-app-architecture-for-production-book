@@ -9,7 +9,8 @@ import { useNotifications } from '@/stores/notifications';
 
 const DashboardCreateJobPage = () => {
   const router = useRouter();
-  const { showNotification } = useNotifications();
+  const showNotification =
+    useNotifications.use.showNotification();
 
   const onSuccess = () => {
     showNotification({

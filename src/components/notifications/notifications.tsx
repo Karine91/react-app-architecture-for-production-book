@@ -13,8 +13,10 @@ import {
 } from '@/stores/notifications';
 
 export const Notifications = () => {
-  const { notifications, dismissNotification } =
-    useNotifications();
+  const notifications =
+    useNotifications.use.notifications();
+  const dismissNotification =
+    useNotifications.use.dismissNotification();
 
   if (notifications.length < 1) return null;
 

@@ -13,6 +13,10 @@ const getJobsHandler = http.get(
       request.url
     ).get('organizationId') as string;
 
+    console.log(request.url);
+
+    console.log(organizationId);
+
     const jobs = db.job.findMany({
       where: {
         organizationId: {

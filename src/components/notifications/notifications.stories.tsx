@@ -13,7 +13,8 @@ const meta: Meta = {
 export default meta;
 
 const Template: Story = () => {
-  const { showNotification } = useNotifications();
+  const showNotification =
+    useNotifications.use.showNotification();
 
   return (
     <Stack>

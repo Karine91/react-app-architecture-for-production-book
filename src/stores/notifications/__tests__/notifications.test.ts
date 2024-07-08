@@ -1,5 +1,5 @@
 import {
-  notificationsStore,
+  useNotifications,
   Notification,
 } from '../notifications';
 
@@ -13,23 +13,23 @@ const notification = {
 describe('notifications store', () => {
   it('should show and dismiss notifications', () => {
     expect(
-      notificationsStore.getState().notifications.length
+      useNotifications.getState().notifications.length
     ).toBe(0);
 
-    notificationsStore
+    useNotifications
       .getState()
       .showNotification(notification);
 
     expect(
-      notificationsStore.getState().notifications
+      useNotifications.getState().notifications
     ).toContainEqual(notification);
 
-    notificationsStore
+    useNotifications
       .getState()
       .dismissNotification(notification.id);
 
     expect(
-      notificationsStore.getState().notifications
+      useNotifications.getState().notifications
     ).not.toContainEqual(notification);
   });
 });

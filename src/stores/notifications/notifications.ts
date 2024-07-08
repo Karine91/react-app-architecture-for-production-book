@@ -1,6 +1,8 @@
-import { createStore, useStore } from 'zustand';
+import { create } from 'zustand';
 
 import { uid } from '@/utils/uid';
+
+import createSelectors from './selectors';
 
 export type NotificationType =
   | 'info'
@@ -16,16 +18,16 @@ export type Notification = {
   message?: string;
 };
 
-export type NotificationsStore = {
+export interface NotificationsStore {
   notifications: Notification[];
   showNotification: (
     notification: Omit<Notification, 'id'>
   ) => void;
   dismissNotification: (id: string) => void;
-};
+}
 
-export const notificationsStore =
-  createStore<NotificationsStore>((set, get) => ({
+export const createNotificationsStore =
+  create<NotificationsStore>()((set, get) => ({
     notifications: [],
     showNotification: (notification) => {
       const id = uid();
@@ -50,5 +52,6 @@ export const notificationsStore =
     },
   }));
 
-export const useNotifications = () =>
-  useStore(notificationsStore);
+export const useNotifications = createSelectors(
+  createNotificationsStore
+);

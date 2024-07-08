@@ -39,6 +39,7 @@
     "react-dom": "18.2.0",
     "react-error-boundary": "^3.1.4",
     "react-hook-form": "^7.34.2",
+    "undici": "^5.26.2",
     "zustand": "^4.1.1"
   },
   "devDependencies": {

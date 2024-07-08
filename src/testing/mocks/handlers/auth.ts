@@ -18,14 +18,11 @@ const loginHandler = http.post(
 
     await delay(300);
 
-    return HttpResponse.json(
-      { user },
-      {
-        headers: {
-          'Set-Cookie': `${AUTH_COOKIE}=${jwt}; HttpOnly; Path=/`,
-        },
-      }
-    );
+    return HttpResponse.json(user, {
+      headers: {
+        'Set-Cookie': `${AUTH_COOKIE}=${jwt}`,
+      },
+    });
   }
 );
 
@@ -34,20 +31,18 @@ const logoutHandler = http.post(
   async () => {
     await delay(300);
 
-    return HttpResponse.json(
-      { success: true },
-      {
-        headers: {
-          'Set-Cookie': `${AUTH_COOKIE}=''; HttpOnly; Path=/`,
-        },
-      }
-    );
+    return new HttpResponse('success', {
+      headers: {
+        'Set-Cookie': `${AUTH_COOKIE}=''; HttpOnly; Path=/`,
+      },
+    });
   }
 );
 
 const meHandler = http.get(
   `${API_URL}/auth/me`,
   async ({ cookies }) => {
+    console.log('cookies', cookies);
     const user = requireAuth({
       cookies,
       shouldThrow: false,
@@ -55,7 +50,7 @@ const meHandler = http.get(
 
     await delay(300);
 
-    return HttpResponse.json({ user });
+    return HttpResponse.json(user, { status: 200 });
   }
 );
 

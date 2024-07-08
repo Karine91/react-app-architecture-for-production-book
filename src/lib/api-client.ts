@@ -1,13 +1,14 @@
 import Axios from 'axios';
 
 import { API_URL } from '@/config/constants';
-import { notificationsStore } from '@/stores/notifications';
+import { useNotifications } from '@/stores/notifications';
 
 export const apiClient = Axios.create({
   baseURL: API_URL,
   headers: {
     'Content-Type': 'application/json',
   },
+  withCredentials: true,
 });
 
 apiClient.interceptors.response.use(
@@ -15,10 +16,11 @@ apiClient.interceptors.response.use(
     return response.data;
   },
   (error) => {
+    console.log('intersept an error');
     const message =
       error.response?.data?.message || error.message;
 
-    notificationsStore.getState().showNotification({
+    useNotifications.getState().showNotification({
       type: 'error',
       title: 'Error',
       duration: 5000,
