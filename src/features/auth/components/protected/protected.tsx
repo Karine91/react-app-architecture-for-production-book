@@ -15,7 +15,6 @@ export const Protected = ({
 }: ProtectedProps) => {
   const { replace, asPath } = useRouter();
   const user = useUser();
-  console.log('Protected', user);
 
   useEffect(() => {
     if (!user.data && !user.isLoading) {

@@ -1,3 +1,5 @@
+import { RestRequest } from 'msw';
+
 import { IS_TEST } from '@/config/constants';
 import { AuthUser } from '@/features/auth';
 
@@ -18,16 +20,14 @@ const sanitizeUser = (user: any): AuthUser => {
 export const getUser = () =>
   sanitizeUser(testData.users[0]);
 
-export type AuthenticateParamsType = {
-  email: string;
-  password: string;
-};
-
 // returns the user object and auth token if the provided credentials are valid
 export const authenticate = ({
   email,
   password,
-}: AuthenticateParamsType) => {
+}: {
+  email: string;
+  password: string;
+}) => {
   const user = db.user.findFirst({
     where: {
       email: {
@@ -47,17 +47,16 @@ export const authenticate = ({
 
 // extract the token and return the user if exists
 export const requireAuth = ({
-  cookies,
+  req,
   shouldThrow = true,
 }: {
-  cookies: Record<string, string>;
+  req: RestRequest;
   shouldThrow?: boolean;
 }) => {
   if (IS_TEST) {
     return getUser();
   } else {
-    const encodedToken = cookies[AUTH_COOKIE];
-    console.log('encodedToken', encodedToken);
+    const encodedToken = req.cookies[AUTH_COOKIE];
 
     if (encodedToken !== AUTH_TOKEN) {
       if (shouldThrow) {

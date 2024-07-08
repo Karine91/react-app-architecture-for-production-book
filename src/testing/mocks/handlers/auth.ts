@@ -1,4 +1,4 @@
-import { http, delay, HttpResponse } from 'msw';
+import { rest } from 'msw';
 
 import { API_URL } from '@/config/constants';
 
@@ -6,51 +6,45 @@ import {
   authenticate,
   requireAuth,
   AUTH_COOKIE,
-  type AuthenticateParamsType,
 } from '../utils';
 
-const loginHandler = http.post(
+const loginHandler = rest.post(
   `${API_URL}/auth/login`,
-  async ({ request }) => {
-    const credentials =
-      (await request.json()) as AuthenticateParamsType;
+  async (req, res, ctx) => {
+    const credentials = await req.json();
     const { user, jwt } = authenticate(credentials);
 
-    await delay(300);
-
-    return HttpResponse.json(user, {
-      headers: {
-        'Set-Cookie': `${AUTH_COOKIE}=${jwt}`,
-      },
-    });
+    return res(
+      ctx.delay(300),
+      ctx.cookie(AUTH_COOKIE, jwt, {
+        path: '/',
+        httpOnly: true,
+      }),
+      ctx.json({ user })
+    );
   }
 );
 
-const logoutHandler = http.post(
+const logoutHandler = rest.post(
   `${API_URL}/auth/logout`,
-  async () => {
-    await delay(300);
-
-    return new HttpResponse('success', {
-      headers: {
-        'Set-Cookie': `${AUTH_COOKIE}=''; HttpOnly; Path=/`,
-      },
-    });
+  async (req, res, ctx) => {
+    return res(
+      ctx.delay(300),
+      ctx.cookie(AUTH_COOKIE, '', {
+        path: '/',
+        httpOnly: true,
+      }),
+      ctx.json({ success: true })
+    );
   }
 );
 
-const meHandler = http.get(
+const meHandler = rest.get(
   `${API_URL}/auth/me`,
-  async ({ cookies }) => {
-    console.log('cookies', cookies);
-    const user = requireAuth({
-      cookies,
-      shouldThrow: false,
-    });
+  async (req, res, ctx) => {
+    const user = requireAuth({ req, shouldThrow: false });
 
-    await delay(300);
-
-    return HttpResponse.json(user, { status: 200 });
+    return res(ctx.delay(300), ctx.json(user));
   }
 );
 

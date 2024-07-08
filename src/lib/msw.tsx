@@ -1,27 +1,18 @@
 import { MSWDevTools } from 'msw-devtools';
-import { ReactNode, useEffect, useState } from 'react';
+import { ReactNode } from 'react';
 
 import { IS_DEVELOPMENT } from '@/config/constants';
 import { db, handlers } from '@/testing/mocks';
-import { initializeMocks } from '@/testing/mocks/initialize';
 
 export type MSWWrapperProps = {
   children: ReactNode;
 };
 
+require('@/testing/mocks/initialize');
+
 export const MSWWrapper = ({
   children,
 }: MSWWrapperProps) => {
-  const [initialized, setInitialized] = useState(false);
-
-  useEffect(() => {
-    if (!initialized) {
-      initializeMocks().then(() => setInitialized(true));
-    }
-  }, []);
-
-  if (!initialized) return null;
-
   return (
     <>
       {IS_DEVELOPMENT && (

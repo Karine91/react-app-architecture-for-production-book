@@ -1,21 +1,16 @@
-import { http, HttpResponse, delay } from 'msw';
+import { rest } from 'msw';
 
 import { API_URL } from '@/config/constants';
-import type { Job } from '@/features/jobs';
 
 import { db } from '../db';
 import { requireAuth } from '../utils';
 
-const getJobsHandler = http.get(
+const getJobsHandler = rest.get(
   `${API_URL}/jobs`,
-  async ({ request }) => {
-    const organizationId = new URLSearchParams(
-      request.url
-    ).get('organizationId') as string;
-
-    console.log(request.url);
-
-    console.log(organizationId);
+  async (req, res, ctx) => {
+    const organizationId = req.url.searchParams.get(
+      'organizationId'
+    ) as string;
 
     const jobs = db.job.findMany({
       where: {
@@ -25,16 +20,18 @@ const getJobsHandler = http.get(
       },
     });
 
-    await delay(300);
-
-    return HttpResponse.json(jobs, { status: 200 });
+    return res(
+      ctx.delay(300),
+      ctx.status(200),
+      ctx.json(jobs)
+    );
   }
 );
 
-const getJobHandler = http.get(
+const getJobHandler = rest.get(
   `${API_URL}/jobs/:jobId`,
-  async ({ params }) => {
-    const jobId = params.jobId as string;
+  async (req, res, ctx) => {
+    const jobId = req.params.jobId as string;
 
     const job = db.job.findFirst({
       where: {
@@ -44,38 +41,39 @@ const getJobHandler = http.get(
       },
     });
 
-    await delay(300);
-
     if (!job) {
-      return HttpResponse.json(
-        { message: 'Not found!' },
-        {
-          status: 404,
-        }
+      return res(
+        ctx.delay(300),
+        ctx.status(404),
+        ctx.json({ message: 'Not found!' })
       );
     }
 
-    return HttpResponse.json(job, {
-      status: 200,
-    });
+    return res(
+      ctx.delay(300),
+      ctx.status(200),
+      ctx.json(job)
+    );
   }
 );
 
-const createJobHandler = http.post(
+const createJobHandler = rest.post(
   `${API_URL}/jobs`,
-  async ({ cookies, request }) => {
-    const user = requireAuth({ cookies });
+  async (req, res, ctx) => {
+    const user = requireAuth({ req });
 
-    const jobData = (await request.json()) as Job;
+    const jobData = await req.json();
 
     const job = db.job.create({
       ...jobData,
       organizationId: user?.organizationId,
     });
 
-    await delay(300);
-
-    return HttpResponse.json(job, { status: 200 });
+    return res(
+      ctx.delay(300),
+      ctx.status(200),
+      ctx.json(job)
+    );
   }
 );
 

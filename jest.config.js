@@ -5,15 +5,12 @@ const createJestConfig = nextJest({
 });
 
 const customJestConfig = {
-  setupFiles: ['<rootDir>/jest.polyfills.js'],
   setupFilesAfterEnv: [
     '<rootDir>/src/testing/setup-tests.ts',
   ],
   moduleDirectories: ['node_modules', '<rootDir>/'],
   testEnvironment: 'jest-environment-jsdom',
-  testEnvironmentOptions: {
-    customExportConditions: [''],
-  },
+
   moduleNameMapper: {
     '@/(.*)': '<rootDir>/src/$1',
   },
