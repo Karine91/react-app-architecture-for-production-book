@@ -84,6 +84,8 @@
     "webpack": "^5.74.0"
   },
   "msw": {
-    "workerDirectory": "public"
+    "workerDirectory": [
+      "public"
+    ]
   }
 }

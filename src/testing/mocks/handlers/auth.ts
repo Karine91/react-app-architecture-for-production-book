@@ -20,7 +20,7 @@ const loginHandler = http.post(
 
     return HttpResponse.json(user, {
       headers: {
-        'Set-Cookie': `${AUTH_COOKIE}=${jwt}`,
+        'Set-Cookie': `${AUTH_COOKIE}=${jwt}; HttpOnly; Path=/`,
       },
     });
   }
